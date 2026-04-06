@@ -137,3 +137,37 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# ─── Rust ───────────────────────────────────────
+target/
+Cargo.lock
+**/*.rs.bk
+
+# ─── Python ─────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ─── Tauri ──────────────────────────────────────
+frontend/src-tauri/target/
+frontend/src-tauri/WixTools/
+
+# ─── Environment ────────────────────────────────
+.env.local
+.env.production
+
+# ─── OS ─────────────────────────────────────────
+.DS_Store
+Thumbs.db
