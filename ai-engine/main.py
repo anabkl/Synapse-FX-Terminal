@@ -122,7 +122,7 @@ async def get_signal(symbol: str) -> SignalResponse:
     # Placeholder: deterministic demo signal derived from symbol hash
     rng = np.random.default_rng(seed=hash(symbol) % (2**32))
     confidence = float(rng.uniform(0.55, 0.95))
-    signal: Literal["LONG", "SHORT", "FLAT"] = rng.choice(["LONG", "SHORT", "FLAT"])  # type: ignore[assignment]
+    signal: Literal["LONG", "SHORT", "FLAT"] = str(rng.choice(["LONG", "SHORT", "FLAT"]))  # type: ignore[assignment]
 
     return SignalResponse(
         symbol=symbol,

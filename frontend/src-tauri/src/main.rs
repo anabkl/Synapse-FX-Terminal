@@ -129,7 +129,11 @@ pub async fn subscribe_ticks(
 
         let (mut ws_sink, mut ws_stream) = ws_stream.split();
 
-        // Send subscription message (exchange-specific format)
+        // Send subscription message — NOTE: This uses a generic format.
+        // Different exchanges use different subscription protocols.
+        // Adapt this message for your target data provider
+        // (e.g. Binance: {"method":"SUBSCRIBE","params":["btcusdt@kline_1m"]},
+        //        Kraken:  {"event":"subscribe","pair":["XBT/USD"],"subscription":{"name":"ohlc"}})
         let subscribe_msg = serde_json::json!({
             "type": "subscribe",
             "symbol": symbol_clone,
@@ -238,7 +242,11 @@ fn main() {
     tracing_subscriber::fmt()
         .with_env_filter(
             tracing_subscriber::EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| "nexusquant_tauri_lib=debug,tauri=warn".parse().unwrap()),
+                .unwrap_or_else(|_| {
+                    "nexusquant_tauri_lib=debug,tauri=warn"
+                        .parse()
+                        .expect("default tracing filter is valid")
+                }),
         )
         .init();
 

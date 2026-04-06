@@ -136,9 +136,16 @@ export default function CandlestickChart() {
     // When the Tauri backend is running, replace demo data with:
     //
     //   import { listen } from "@tauri-apps/api/event";
-    //   const unlisten = await listen<CandlestickData>("tick", (event) => {
-    //     seriesRef.current?.update(event.payload);
-    //   });
+    //   let unlisten: (() => void) | undefined;
+    //   (async () => {
+    //     unlisten = await listen<CandlestickData>("tick", (event) => {
+    //       seriesRef.current?.update(event.payload);
+    //     });
+    //   })();
+    //
+    // IMPORTANT: add `unlisten?.()` to the cleanup return below so the
+    // Tauri event listener is removed when the component unmounts, preventing
+    // memory leaks during hot-reload or navigation.
     //
     // The Rust `subscribe_ticks` command establishes the WS connection
     // and emits "tick" events directly into this component.
