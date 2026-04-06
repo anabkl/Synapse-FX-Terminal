@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── NexusQuant Terminal Global Styles ────────────────────────── */
+
+:root {
+  --terminal-bg: #0a0e1a;
+  --terminal-surface: #0f1629;
+  --terminal-panel: #141e35;
+  --terminal-border: #1e2d4f;
+  --terminal-accent: #00d4ff;
+  --terminal-green: #00e676;
+  --terminal-red: #ff1744;
+  --terminal-amber: #ffab00;
+  --terminal-text: #e8eaf6;
+  --terminal-muted: #546e8a;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--terminal-bg);
+  color: var(--terminal-text);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent native text selection in the terminal UI */
+  user-select: none;
+}
+
+/* Scrollbar styling — terminal aesthetic */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--terminal-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--terminal-border);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--terminal-muted);
+}
+
+/* Utility: allow text selection in data cells */
+.selectable {
+  user-select: text;
+}
+
+/* Ticker tape animation */
+@keyframes ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-tape {
+  animation: ticker 30s linear infinite;
+}

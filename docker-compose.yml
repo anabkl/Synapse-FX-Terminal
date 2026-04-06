@@ -1,0 +1,56 @@
+version: "3.9"
+
+# NexusQuant AI — Local Development Orchestration
+# Founders: Anas Lahraoui & Othman Karam
+
+services:
+  # ──────────────────────────────────────────────
+  # PostgreSQL — Backtesting & Trade History Store
+  # ──────────────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    container_name: nexusquant_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-nexusquant}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nexusquant_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-nexusquant_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./ai-engine/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-nexusquant}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ──────────────────────────────────────────────
+  # AI Engine — FastAPI Signal Generation Service
+  # ──────────────────────────────────────────────
+  ai-engine:
+    build:
+      context: ./ai-engine
+      dockerfile: Dockerfile
+    container_name: nexusquant_ai_engine
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-nexusquant}:${POSTGRES_PASSWORD:-nexusquant_secret}@postgres:5432/${POSTGRES_DB:-nexusquant_db}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./ai-engine:/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_data:
+    driver: local

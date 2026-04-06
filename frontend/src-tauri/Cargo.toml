@@ -1,0 +1,33 @@
+[package]
+name    = "nexusquant-tauri"
+version = "0.1.0"
+edition = "2021"
+authors = ["Anas Lahraoui <anas@nexusquant.ai>", "Othman Karam <othman@nexusquant.ai>"]
+description = "NexusQuant AI — Tauri desktop shell and IPC bridge"
+
+# See https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name       = "nexusquant_tauri_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri           = { version = "2", features = ["tray-icon"] }
+tauri-plugin-shell = "2"
+serde           = { version = "1", features = ["derive"] }
+serde_json      = "1"
+tokio           = { version = "1", features = ["full"] }
+tokio-tungstenite = { version = "0.21", features = ["native-tls"] }
+futures-util    = "0.3"
+tracing         = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+url             = "2"
+reqwest         = { version = "0.12", features = ["json"] }
+
+[features]
+# This feature is used for production builds or when `devPath` points to the
+# filesystem. DO NOT remove it.
+custom-protocol = ["tauri/custom-protocol"]
